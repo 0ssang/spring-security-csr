@@ -1,6 +1,8 @@
 package com.study.jwtauth.infrastructure.security.jwt;
 
+import com.study.jwtauth.domain.user.Role;
 import com.study.jwtauth.infrastructure.config.JwtProperties;
+import com.study.jwtauth.infrastructure.security.CustomUserDetails;
 import com.study.jwtauth.infrastructure.security.exception.ExpiredTokenException;
 import com.study.jwtauth.infrastructure.security.exception.InvalidTokenException;
 import io.jsonwebtoken.*;
@@ -10,17 +12,10 @@ import io.jsonwebtoken.security.SecurityException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -43,12 +38,14 @@ public class JwtProvider {
     /**
      * Access Token 생성
      */
-    public String createAccessToken(String email, String role) {
+    public String createAccessToken(Long userId, String email, String nickname, String role) {
         long now = System.currentTimeMillis();
         Date expiresAt = new Date(now + accessTokenExpiration);
 
         return Jwts.builder()
                 .subject(email)
+                .claim("userId", userId)
+                .claim("nickname", nickname)
                 .claim(AUTHORITIES_KEY, role)
                 .issuedAt(new Date(now))
                 .expiration(expiresAt)
@@ -81,14 +78,17 @@ public class JwtProvider {
             throw new InvalidTokenException("권한 정보가 없는 토큰입니다.");
         }
 
-        // 권한 정보 추출
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+        // Claims에서 사용자 정보 추출
+        Long userId = claims.get("userId", Long.class);
+        String email = claims.getSubject();
+        String nickname = claims.get("nickname", String.class);
+        String roleString = claims.get(AUTHORITIES_KEY, String.class);
+        Role role = Role.valueOf(roleString);
 
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        // CustomUserDetails 생성
+        CustomUserDetails principal = CustomUserDetails.of(userId, email, nickname, role);
+
+        return new UsernamePasswordAuthenticationToken(principal, token, principal.getAuthorities());
     }
 
     /**
