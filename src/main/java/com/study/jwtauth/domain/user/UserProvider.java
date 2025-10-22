@@ -59,4 +59,13 @@ public class UserProvider implements Serializable {
         provider.password = password;
         return provider;
     }
+
+    public static UserProvider createOAuth2Provider(User user, String providerName, String providerId) {
+        UserProvider provider = new UserProvider();
+        provider.user = user;
+        provider.provider = providerName;
+        provider.providerId = providerId;
+        provider.password = null;
+        return provider;
+    }
 }

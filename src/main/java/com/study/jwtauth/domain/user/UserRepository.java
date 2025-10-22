@@ -26,4 +26,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * nickname 중복 체크
      */
     boolean existsByNickname(String nickname);
+
+    /**
+     * provider와 providerId로 사용자 조회 (providers fetch join)
+     * OAuth2 로그인 시 사용
+     */
+    @Query("SELECT u FROM User u JOIN FETCH u.providers p WHERE p.provider = :provider AND p.providerId = :providerId")
+    Optional<User> findByProviderAndProviderId(@Param("provider") String provider, @Param("providerId") String providerId);
 }
