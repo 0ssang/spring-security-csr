@@ -1,7 +1,7 @@
 package com.study.jwtauth.domain.user.exception;
 
-import com.study.jwtauth.domain.common.exception.BusinessException;
-import com.study.jwtauth.domain.common.exception.ErrorCode;
+import com.study.jwtauth.domain.exception.BusinessException;
+import com.study.jwtauth.domain.exception.ErrorCode;
 
 public class DuplicateNicknameException extends BusinessException {
 

@@ -1,4 +1,4 @@
-package com.study.jwtauth.domain.common.exception;
+package com.study.jwtauth.domain.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

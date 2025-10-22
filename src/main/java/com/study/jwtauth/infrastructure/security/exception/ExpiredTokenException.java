@@ -1,7 +1,7 @@
 package com.study.jwtauth.infrastructure.security.exception;
 
-import com.study.jwtauth.domain.common.exception.BusinessException;
-import com.study.jwtauth.domain.common.exception.ErrorCode;
+import com.study.jwtauth.domain.exception.BusinessException;
+import com.study.jwtauth.domain.exception.ErrorCode;
 
 public class ExpiredTokenException extends BusinessException {
 

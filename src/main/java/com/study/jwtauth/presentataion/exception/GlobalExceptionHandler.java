@@ -1,7 +1,7 @@
 package com.study.jwtauth.presentataion.exception;
 
-import com.study.jwtauth.domain.common.exception.BusinessException;
-import com.study.jwtauth.domain.common.exception.ErrorCode;
+import com.study.jwtauth.domain.exception.BusinessException;
+import com.study.jwtauth.domain.exception.ErrorCode;
 import com.study.jwtauth.presentataion.dto.common.ApiResponse;
 import com.study.jwtauth.presentataion.dto.common.ExceptionDto;
 import lombok.extern.slf4j.Slf4j;

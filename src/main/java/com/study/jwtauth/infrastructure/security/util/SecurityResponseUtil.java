@@ -1,7 +1,7 @@
 package com.study.jwtauth.infrastructure.security.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.study.jwtauth.domain.common.exception.ErrorCode;
+import com.study.jwtauth.domain.exception.ErrorCode;
 import com.study.jwtauth.presentataion.dto.common.ExceptionDto;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;

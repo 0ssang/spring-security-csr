@@ -1,6 +1,6 @@
 package com.study.jwtauth.infrastructure.security.jwt;
 
-import com.study.jwtauth.domain.common.exception.ErrorCode;
+import com.study.jwtauth.domain.exception.ErrorCode;
 import com.study.jwtauth.infrastructure.security.util.SecurityResponseUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

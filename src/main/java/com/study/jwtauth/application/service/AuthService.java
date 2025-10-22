@@ -2,7 +2,6 @@ package com.study.jwtauth.application.service;
 
 import com.study.jwtauth.domain.auth.RefreshToken;
 import com.study.jwtauth.domain.auth.RefreshTokenRepository;
-import com.study.jwtauth.domain.common.exception.ErrorCode;
 import com.study.jwtauth.domain.user.User;
 import com.study.jwtauth.domain.user.UserProvider;
 import com.study.jwtauth.domain.user.UserRepository;

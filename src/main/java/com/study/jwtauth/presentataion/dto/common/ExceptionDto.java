@@ -1,6 +1,6 @@
 package com.study.jwtauth.presentataion.dto.common;
 
-import com.study.jwtauth.domain.common.exception.ErrorCode;
+import com.study.jwtauth.domain.exception.ErrorCode;
 
 public record ExceptionDto(
         String code,
