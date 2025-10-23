@@ -18,6 +18,8 @@ import com.study.jwtauth.presentataion.dto.response.TokenResponse;
 import com.study.jwtauth.presentataion.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AuthService {
+
+    private static final Logger authLogger = LoggerFactory.getLogger("AUTH_LOGGER");
 
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -72,42 +76,56 @@ public class AuthService {
      */
     @Transactional
     public TokenResponse login(LoginRequest request) {
-        // 사용자 조회 (UserProvider도 함께 조회)
-        User user = userRepository.findByEmailWithProvider(request.email())
-                .orElseThrow(() -> new InvalidCredentialsException());
+        try {
+            // 사용자 조회 (UserProvider도 함께 조회)
+            User user = userRepository.findByEmailWithProvider(request.email())
+                    .orElseThrow(() -> {
+                        authLogger.warn("로그인 실패 - 사용자 없음: email={}", request.email());
+                        return new InvalidCredentialsException();
+                    });
 
-        // Local Provider 찾기
-        UserProvider localProvider = user.getProviders().stream()
-                .filter(provider -> "local".equals(provider.getProvider()))
-                .findFirst()
-                .orElseThrow(() -> new InvalidCredentialsException());
+            // Local Provider 찾기
+            UserProvider localProvider = user.getProviders().stream()
+                    .filter(provider -> "local".equals(provider.getProvider()))
+                    .findFirst()
+                    .orElseThrow(() -> {
+                        authLogger.warn("로그인 실패 - Local Provider 없음: email={}", request.email());
+                        return new InvalidCredentialsException();
+                    });
 
-        // 비밀번호 검증
-        if (!passwordEncoder.matches(request.password(), localProvider.getPassword())) {
-            throw new InvalidCredentialsException();
+            // 비밀번호 검증
+            if (!passwordEncoder.matches(request.password(), localProvider.getPassword())) {
+                authLogger.warn("로그인 실패 - 비밀번호 불일치: email={}", request.email());
+                throw new InvalidCredentialsException();
+            }
+
+            // JWT 토큰 생성
+            String accessToken = jwtProvider.createAccessToken(
+                    user.getId(),
+                    user.getEmail(),
+                    user.getNickname(),
+                    user.getRole().name()
+            );
+
+            String refreshToken = jwtProvider.createRefreshToken(user.getEmail());
+
+            // Refresh Token을 Redis에 저장
+            RefreshToken refreshTokenEntity = RefreshToken.of(
+                    user.getEmail(),
+                    refreshToken,
+                    jwtProvider.getRefreshTokenExpiration()
+            );
+            refreshTokenRepository.save(refreshTokenEntity);
+
+            authLogger.info("로그인 성공: email={}, userId={}", user.getEmail(), user.getId());
+
+            return TokenResponse.of(accessToken, refreshToken);
+        } catch (InvalidCredentialsException e) {
+            throw e;
+        } catch (Exception e) {
+            authLogger.error("로그인 처리 중 예외 발생: email={}, error={}", request.email(), e.getMessage());
+            throw e;
         }
-
-        // JWT 토큰 생성
-        String accessToken = jwtProvider.createAccessToken(
-                user.getId(),
-                user.getEmail(),
-                user.getNickname(),
-                user.getRole().name()
-        );
-
-        String refreshToken = jwtProvider.createRefreshToken(user.getEmail());
-
-        // Refresh Token을 Redis에 저장
-        RefreshToken refreshTokenEntity = RefreshToken.of(
-                user.getEmail(),
-                refreshToken,
-                jwtProvider.getRefreshTokenExpiration()
-        );
-        refreshTokenRepository.save(refreshTokenEntity);
-
-        log.info("로그인 성공: email={}", user.getEmail());
-
-        return TokenResponse.of(accessToken, refreshToken);
     }
 
     /**
@@ -167,6 +185,6 @@ public class AuthService {
         // Redis에서 Refresh Token 삭제
         refreshTokenRepository.deleteById(email);
 
-        log.info("로그아웃 성공: email={}", email);
+        authLogger.info("로그아웃 성공: email={}", email);
     }
 }

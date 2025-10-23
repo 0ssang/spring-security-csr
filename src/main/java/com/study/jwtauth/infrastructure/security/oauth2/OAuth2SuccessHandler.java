@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -29,6 +31,8 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
+    private static final Logger authLogger = LoggerFactory.getLogger("AUTH_LOGGER");
 
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
@@ -55,7 +59,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         );
         String email = oAuth2UserInfo.getEmail();
 
-        log.info("OAuth2 로그인 성공: provider={}, email={}", registrationId, email);
+        authLogger.info("OAuth2 로그인 성공: provider={}, email={}", registrationId, email);
 
         // 3. email로 DB에서 User 조회
         User user = userRepository.findByEmailWithProvider(email)
@@ -78,7 +82,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 jwtProvider.getRefreshTokenExpiration()
         ));
 
-        log.info("JWT 토큰 발급 완료: userId={}, email={}", user.getId(), user.getEmail());
+        authLogger.info("OAuth2 JWT 토큰 발급 완료: provider={}, userId={}, email={}", registrationId, user.getId(), user.getEmail());
 
         // 6. 프론트엔드로 리다이렉트 (토큰을 쿼리 파라미터로 전달)
         String targetUrl = UriComponentsBuilder.fromUriString(redirectUri)
