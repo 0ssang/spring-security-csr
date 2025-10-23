@@ -91,6 +91,6 @@ jwt:
 # Logging
 logging:
   level:
-    org.springframework.security: DEBUG
+    org.springframework.security: INFO
     com.study.jwtauth: DEBUG
-    org.springframework.web: DEBUG
+    org.springframework.web: INFO
