@@ -2,6 +2,11 @@ spring:
   application:
     name: jwt-auth
 
+  # Console Output (ANSI 색상 강제 활성화)
+  output:
+    ansi:
+      enabled: ALWAYS
+
   # Database
   datasource:
     url: ${DB_URL}
