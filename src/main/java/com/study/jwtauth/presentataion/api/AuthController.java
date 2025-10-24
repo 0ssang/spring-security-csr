@@ -34,6 +34,7 @@ public class AuthController {
      */
     @PostMapping("/signup")
     public ApiResponse<UserResponse> signup(@Valid @RequestBody SignUpRequest request) {
+        // ApiLoggingInterceptor에서 제외된 경로이므로 여기서 로깅
         log.info("회원가입 요청: email={}", request.email());
 
         UserResponse response = authService.signUp(request);
@@ -47,8 +48,7 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ApiResponse<TokenResponse> login(@Valid @RequestBody LoginRequest request) {
-        log.info("로그인 요청: email={}", request.email());
-
+        // API 로그는 ApiLoggingInterceptor, 인증 로그는 AuthService에서 기록
         TokenResponse response = authService.login(request);
 
         return ApiResponse.ok(response);
@@ -60,8 +60,7 @@ public class AuthController {
      */
     @PostMapping("/refresh")
     public ApiResponse<TokenResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
-        log.info("토큰 재발급 요청");
-
+        // API 로그는 ApiLoggingInterceptor에서 기록
         TokenResponse response = authService.refresh(request);
 
         return ApiResponse.ok(response);
@@ -73,8 +72,7 @@ public class AuthController {
      */
     @PostMapping("/logout")
     public ApiResponse<Void> logout(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        log.info("로그아웃 요청: email={}", userDetails.getEmail());
-
+        // API 로그는 ApiLoggingInterceptor, 인증 로그는 AuthService에서 기록
         authService.logout(userDetails.getEmail());
 
         return ApiResponse.ok(null);

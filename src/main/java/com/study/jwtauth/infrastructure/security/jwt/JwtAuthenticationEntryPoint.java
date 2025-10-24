@@ -2,6 +2,7 @@ package com.study.jwtauth.infrastructure.security.jwt;
 
 import com.study.jwtauth.domain.exception.BusinessException;
 import com.study.jwtauth.domain.exception.ErrorCode;
+import com.study.jwtauth.infrastructure.logging.StructuredLogger;
 import com.study.jwtauth.infrastructure.security.util.SecurityResponseUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,17 +26,25 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                          HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
 
-        log.error("인증되지 않은 사용자의 접근: {}", authException.getMessage());
-
         // JwtAuthenticationFilter에서 설정한 예외 확인
         Exception exception = (Exception) request.getAttribute("exception");
 
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
+        String errorType = "AuthenticationException";
 
         // 토큰 관련 예외가 있는 경우 해당 에러 코드 사용
         if (exception instanceof BusinessException) {
             errorCode = ((BusinessException) exception).getErrorCode();
+            errorType = exception.getClass().getSimpleName();
         }
+
+        // 구조화된 로그로 인증 실패 기록
+        StructuredLogger.logSecurityError(
+                log,
+                request.getRequestURI(),
+                errorType,
+                "Unauthorized access attempt: " + authException.getMessage()
+        );
 
         SecurityResponseUtil.sendErrorResponse(response, errorCode);
     }

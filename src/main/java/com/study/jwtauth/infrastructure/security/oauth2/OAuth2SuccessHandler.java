@@ -5,6 +5,7 @@ import com.study.jwtauth.domain.auth.RefreshTokenRepository;
 import com.study.jwtauth.domain.user.User;
 import com.study.jwtauth.domain.user.UserRepository;
 import com.study.jwtauth.domain.user.exception.UserNotFoundException;
+import com.study.jwtauth.infrastructure.logging.StructuredLogger;
 import com.study.jwtauth.infrastructure.security.jwt.JwtProvider;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -59,8 +60,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         );
         String email = oAuth2UserInfo.getEmail();
 
-        authLogger.info("OAuth2 로그인 성공: provider={}, email={}", registrationId, email);
-
         // 3. email로 DB에서 User 조회
         User user = userRepository.findByEmailWithProvider(email)
                 .orElseThrow(UserNotFoundException::new);
@@ -82,9 +81,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 jwtProvider.getRefreshTokenExpiration()
         ));
 
-        authLogger.info("OAuth2 JWT 토큰 발급 완료: provider={}, userId={}, email={}", registrationId, user.getId(), user.getEmail());
+        // 6. 구조화된 로그로 OAuth2 로그인 성공 기록
+        StructuredLogger.logAuthSuccess(authLogger, user.getEmail(), user.getId(), registrationId);
 
-        // 6. 프론트엔드로 리다이렉트 (토큰을 쿼리 파라미터로 전달)
+        // 7. 프론트엔드로 리다이렉트 (토큰을 쿼리 파라미터로 전달)
         String targetUrl = UriComponentsBuilder.fromUriString(redirectUri)
                 .queryParam("accessToken", accessToken)
                 .queryParam("refreshToken", refreshToken)

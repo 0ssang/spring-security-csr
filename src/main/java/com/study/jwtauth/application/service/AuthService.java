@@ -9,6 +9,7 @@ import com.study.jwtauth.domain.user.exception.DuplicateEmailException;
 import com.study.jwtauth.domain.user.exception.DuplicateNicknameException;
 import com.study.jwtauth.domain.user.exception.InvalidCredentialsException;
 import com.study.jwtauth.domain.user.exception.UserNotFoundException;
+import com.study.jwtauth.infrastructure.logging.StructuredLogger;
 import com.study.jwtauth.infrastructure.security.exception.InvalidTokenException;
 import com.study.jwtauth.infrastructure.security.jwt.JwtProvider;
 import com.study.jwtauth.presentataion.dto.request.LoginRequest;
@@ -80,7 +81,7 @@ public class AuthService {
             // 사용자 조회 (UserProvider도 함께 조회)
             User user = userRepository.findByEmailWithProvider(request.email())
                     .orElseThrow(() -> {
-                        authLogger.warn("로그인 실패 - 사용자 없음: email={}", request.email());
+                        StructuredLogger.logAuthFailure(authLogger, request.email(), "local", "user_not_found");
                         return new InvalidCredentialsException();
                     });
 
@@ -89,13 +90,13 @@ public class AuthService {
                     .filter(provider -> "local".equals(provider.getProvider()))
                     .findFirst()
                     .orElseThrow(() -> {
-                        authLogger.warn("로그인 실패 - Local Provider 없음: email={}", request.email());
+                        StructuredLogger.logAuthFailure(authLogger, request.email(), "local", "local_provider_not_found");
                         return new InvalidCredentialsException();
                     });
 
             // 비밀번호 검증
             if (!passwordEncoder.matches(request.password(), localProvider.getPassword())) {
-                authLogger.warn("로그인 실패 - 비밀번호 불일치: email={}", request.email());
+                StructuredLogger.logAuthFailure(authLogger, request.email(), "local", "password_mismatch");
                 throw new InvalidCredentialsException();
             }
 
@@ -117,13 +118,13 @@ public class AuthService {
             );
             refreshTokenRepository.save(refreshTokenEntity);
 
-            authLogger.info("로그인 성공: email={}, userId={}", user.getEmail(), user.getId());
+            StructuredLogger.logAuthSuccess(authLogger, user.getEmail(), user.getId(), "local");
 
             return TokenResponse.of(accessToken, refreshToken);
         } catch (InvalidCredentialsException e) {
             throw e;
         } catch (Exception e) {
-            authLogger.error("로그인 처리 중 예외 발생: email={}, error={}", request.email(), e.getMessage());
+            StructuredLogger.logAuthFailure(authLogger, request.email(), "local", "unexpected_error: " + e.getMessage());
             throw e;
         }
     }
@@ -185,6 +186,9 @@ public class AuthService {
         // Redis에서 Refresh Token 삭제
         refreshTokenRepository.deleteById(email);
 
-        authLogger.info("로그아웃 성공: email={}", email);
+        // userId를 조회하여 구조화된 로그 작성
+        userRepository.findByEmail(email).ifPresent(user ->
+                StructuredLogger.logLogout(authLogger, email, user.getId())
+        );
     }
 }

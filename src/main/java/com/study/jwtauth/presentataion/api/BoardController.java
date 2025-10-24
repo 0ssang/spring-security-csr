@@ -27,8 +27,7 @@ public class BoardController {
     public ApiResponse<List<BoardResponse>> getBoards(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        log.info("게시글 목록 조회 요청: userId={}, email={}",
-                userDetails.getId(), userDetails.getEmail());
+        // API 로그는 ApiLoggingInterceptor에서 자동으로 기록 (userId, email 포함)
 
         // Mock 데이터 반환 (실제로는 DB 조회)
         List<BoardResponse> boards = List.of(
@@ -49,8 +48,7 @@ public class BoardController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody CreateBoardRequest request
     ) {
-        log.info("게시글 작성 요청: userId={}, title={}",
-                userDetails.getId(), request.title());
+        // API 로그는 ApiLoggingInterceptor에서 자동으로 기록
 
         // Mock 데이터 반환 (실제로는 DB 저장)
         BoardResponse board = BoardResponse.of(
@@ -72,8 +70,7 @@ public class BoardController {
     public ApiResponse<List<BoardResponse>> getMyBoards(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        log.info("내 게시글 조회 요청: userId={}, nickname={}",
-                userDetails.getId(), userDetails.getNickname());
+        // API 로그는 ApiLoggingInterceptor에서 자동으로 기록
 
         // Mock 데이터 반환 (실제로는 DB 조회)
         List<BoardResponse> myBoards = List.of(
@@ -93,8 +90,7 @@ public class BoardController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long id
     ) {
-        log.info("게시글 조회 요청: userId={}, boardId={}",
-                userDetails.getId(), id);
+        // API 로그는 ApiLoggingInterceptor에서 자동으로 기록
 
         // Mock 데이터 반환 (실제로는 DB 조회)
         BoardResponse board = BoardResponse.of(

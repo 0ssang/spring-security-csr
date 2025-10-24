@@ -1,6 +1,7 @@
 package com.study.jwtauth.infrastructure.security.jwt;
 
 import com.study.jwtauth.domain.exception.ErrorCode;
+import com.study.jwtauth.infrastructure.logging.StructuredLogger;
 import com.study.jwtauth.infrastructure.security.util.SecurityResponseUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +25,13 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
                        HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
-        log.error("접근 권한이 없는 사용자의 접근: {}", accessDeniedException.getMessage());
+        // 구조화된 로그로 권한 없음 기록
+        StructuredLogger.logSecurityError(
+                log,
+                request.getRequestURI(),
+                "AccessDeniedException",
+                "Access denied: " + accessDeniedException.getMessage()
+        );
 
         ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
         SecurityResponseUtil.sendErrorResponse(response, errorCode);

@@ -1,5 +1,6 @@
 package com.study.jwtauth.infrastructure.security.jwt;
 
+import com.study.jwtauth.infrastructure.logging.StructuredLogger;
 import com.study.jwtauth.infrastructure.security.exception.ExpiredTokenException;
 import com.study.jwtauth.infrastructure.security.exception.InvalidTokenException;
 import jakarta.servlet.FilterChain;
@@ -39,8 +40,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.debug("Security Context에 '{}' 인증 정보를 저장했습니다.", authentication.getName());
             }
-        } catch (InvalidTokenException | ExpiredTokenException e) {
-            log.error("JWT 토큰 검증 실패: {}", e.getMessage());
+        } catch (ExpiredTokenException e) {
+            StructuredLogger.logJwtValidationFailure(
+                    log,
+                    request.getRequestURI(),
+                    "ExpiredTokenException",
+                    "JWT token expired: " + e.getMessage()
+            );
+            // 예외를 request attribute에 저장하여 AuthenticationEntryPoint에서 처리
+            request.setAttribute("exception", e);
+        } catch (InvalidTokenException e) {
+            StructuredLogger.logJwtValidationFailure(
+                    log,
+                    request.getRequestURI(),
+                    "InvalidTokenException",
+                    "JWT token validation failed: " + e.getMessage()
+            );
             // 예외를 request attribute에 저장하여 AuthenticationEntryPoint에서 처리
             request.setAttribute("exception", e);
         }

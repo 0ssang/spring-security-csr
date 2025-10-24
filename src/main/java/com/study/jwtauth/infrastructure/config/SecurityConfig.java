@@ -26,6 +26,16 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Spring Security 설정
+ *
+ * Filter 실행 순서:
+ * 1. MdcLoggingFilter (@Component + @Order로 자동 등록)
+ * 2. SecurityFilterChain (이 클래스에서 정의)
+ *    - JwtAuthenticationFilter
+ *    - UsernamePasswordAuthenticationFilter
+ *    - ...
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
