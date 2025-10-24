@@ -20,8 +20,8 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(apiLoggingInterceptor)
                 .addPathPatterns("/api/**")  // /api로 시작하는 모든 요청
                 .excludePathPatterns(
-                        "/api/auth/login",    // 로그인은 AuthService에서 로깅
-                        "/api/auth/signup"    // 회원가입은 제외
+                        "/api/auth/signup"    // 회원가입만 제외 (민감 정보)
+                        // 로그인/로그아웃은 인터셉터에 포함 (API 로그 + 인증 로그 분리)
                 );
     }
 }
