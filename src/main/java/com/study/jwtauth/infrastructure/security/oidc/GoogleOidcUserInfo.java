@@ -1,4 +1,4 @@
-package com.study.jwtauth.infrastructure.security.oauth2;
+package com.study.jwtauth.infrastructure.security.oidc;
 
 import java.util.Map;
 
@@ -10,11 +10,11 @@ import java.util.Map;
  * - name: 이름
  * - picture: 프로필 이미지
  */
-public class GoogleOAuth2UserInfo implements OAuth2UserInfo {
+public class GoogleOidcUserInfo implements OidcUserInfo {
 
     private final Map<String, Object> attributes;
 
-    public GoogleOAuth2UserInfo(Map<String, Object> attributes) {
+    public GoogleOidcUserInfo(Map<String, Object> attributes) {
         this.attributes = attributes;
     }
 

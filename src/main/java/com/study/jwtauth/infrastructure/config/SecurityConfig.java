@@ -4,9 +4,8 @@ import com.study.jwtauth.infrastructure.security.jwt.JwtAccessDeniedHandler;
 import com.study.jwtauth.infrastructure.security.jwt.JwtAuthenticationEntryPoint;
 import com.study.jwtauth.infrastructure.security.jwt.JwtAuthenticationFilter;
 import com.study.jwtauth.infrastructure.security.jwt.JwtProvider;
-import com.study.jwtauth.infrastructure.security.oauth2.CustomOAuth2UserService;
-import com.study.jwtauth.infrastructure.security.oauth2.CustomOidcUserService;
-import com.study.jwtauth.infrastructure.security.oauth2.OAuth2SuccessHandler;
+import com.study.jwtauth.infrastructure.security.oidc.CustomOidcUserService;
+import com.study.jwtauth.infrastructure.security.oidc.OidcSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,9 +43,8 @@ public class SecurityConfig {
     private final JwtProvider jwtProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomOidcUserService customOidcUserService;
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final OidcSuccessHandler oidcSuccessHandler;
 
     @Bean
     BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -144,15 +142,14 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                // OAuth2 로그인 설정
+                // OAuth2/OIDC 로그인 설정
                 .oauth2Login(oauth2 -> oauth2
-                        // OAuth2/OIDC 사용자 정보 로드 서비스 설정
+                        // OIDC 사용자 정보 로드 서비스 설정 (Google, Kakao, Naver 모두 OIDC 통합)
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(customOAuth2UserService)           // Kakao, Naver (OAuth2)
-                                .oidcUserService(customOidcUserService)         // Google (OIDC)
+                                .oidcUserService(customOidcUserService)         // Google, Kakao, Naver (OIDC)
                         )
                         // 로그인 성공 핸들러 (JWT 발급)
-                        .successHandler(oAuth2SuccessHandler)
+                        .successHandler(oidcSuccessHandler)
                 )
 
                 // JWT 필터 추가 (UsernamePasswordAuthenticationFilter 전에 실행)

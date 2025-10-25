@@ -1,4 +1,4 @@
-package com.study.jwtauth.infrastructure.security.oauth2;
+package com.study.jwtauth.infrastructure.security.oidc;
 
 import com.study.jwtauth.domain.auth.RefreshToken;
 import com.study.jwtauth.domain.auth.RefreshTokenRepository;
@@ -31,7 +31,7 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+public class OidcSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private static final Logger authLogger = LoggerFactory.getLogger("AUTH_LOGGER");
 
@@ -54,11 +54,11 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String registrationId = authToken.getAuthorizedClientRegistrationId();
 
         // 2. OAuth2UserInfo를 통해 email 추출
-        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(
+        OidcUserInfo oidcUserInfo = OidcUserInfoFactory.getOAuth2UserInfo(
                 registrationId,
                 oAuth2User.getAttributes()
         );
-        String email = oAuth2UserInfo.getEmail();
+        String email = oidcUserInfo.getEmail();
 
         // 3. email로 DB에서 User 조회
         User user = userRepository.findByEmailWithProvider(email)

@@ -1,4 +1,4 @@
-package com.study.jwtauth.infrastructure.security.oauth2;
+package com.study.jwtauth.infrastructure.security.oidc;
 
 import com.study.jwtauth.domain.exception.BusinessException;
 import com.study.jwtauth.domain.exception.ErrorCode;
@@ -11,7 +11,7 @@ import java.util.Map;
  * OAuth2 제공자별 사용자 정보 객체를 생성하는 팩토리 클래스
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class OAuth2UserInfoFactory {
+public class OidcUserInfoFactory {
 
     /**
      * registrationId에 따라 적절한 OAuth2UserInfo 구현체 생성
@@ -21,11 +21,11 @@ public class OAuth2UserInfoFactory {
      * @return OAuth2UserInfo 구현체
      * @throws BusinessException 지원하지 않는 OAuth2 제공자인 경우
      */
-    public static OAuth2UserInfo getOAuth2UserInfo(String registrationId, Map<String, Object> attributes) {
+    public static OidcUserInfo getOAuth2UserInfo(String registrationId, Map<String, Object> attributes) {
         return switch (registrationId.toLowerCase()) {
-            case "google" -> new GoogleOAuth2UserInfo(attributes);
-            case "kakao" -> new KakaoOAuth2UserInfo(attributes);
-            case "naver" -> new NaverOAuth2UserInfo(attributes);
+            case "google" -> new GoogleOidcUserInfo(attributes);
+            case "kakao" -> new KakaoOidcUserInfo(attributes);
+            case "naver" -> new NaverOidcUserInfo(attributes);
             default -> throw new BusinessException(ErrorCode.UNSUPPORTED_OAUTH2_PROVIDER);
         };
     }

@@ -1,4 +1,4 @@
-package com.study.jwtauth.infrastructure.security.oauth2;
+package com.study.jwtauth.infrastructure.security.oidc;
 
 import java.util.Map;
 
@@ -6,7 +6,7 @@ import java.util.Map;
  * OAuth2 제공자별 사용자 정보를 추상화하는 인터페이스
  * Google(OIDC), Kakao, Naver의 서로 다른 attributes 구조를 통일된 방식으로 접근
  */
-public interface OAuth2UserInfo {
+public interface OidcUserInfo {
 
     /**
      * OAuth2 제공자에서 제공하는 사용자 고유 ID
