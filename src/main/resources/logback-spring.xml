@@ -8,8 +8,8 @@
     <property name="LOG_PATH" value="./logs"/>
     <property name="LOG_FILE_NAME" value="application"/>
 
-    <!-- 로그 패턴 (파일용) -->
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
+    <!-- 로그 패턴 (파일용) - 스택 트레이스 상위 10개로 제한 -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n%ex{10}"/>
 
     <!-- 전체 애플리케이션 로그 파일 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
