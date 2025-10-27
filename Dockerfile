@@ -1,26 +1,28 @@
 # Multi-stage build for optimized image size
 
 # Stage 1: Build
-FROM gradle:8-jdk17-alpine AS builder
+FROM gradle:8-jdk17 AS builder
 
 WORKDIR /app
 
 # Gradle 의존성 캐싱을 위한 레이어 분리
-COPY build.gradle settings.gradle ./
+COPY build.gradle.kts settings.gradle.kts ./
 COPY gradle ./gradle
-RUN gradle dependencies --no-daemon || true
+COPY gradlew ./
+RUN chmod +x gradlew
+RUN ./gradlew dependencies --no-daemon || true
 
 # 소스 코드 복사 및 빌드
 COPY . .
-RUN gradle clean build -x test --no-daemon
+RUN ./gradlew clean build -x test --no-daemon
 
 # Stage 2: Runtime
-FROM eclipse-temurin:17-jre-alpine
+FROM amazoncorretto:17-alpine AS runtime
 
 WORKDIR /app
 
 # 타임존 설정 (한국 시간)
-RUN apk add --no-cache tzdata && \
+RUN apk add --no-cache tzdata wget && \
     cp /usr/share/zoneinfo/Asia/Seoul /etc/localtime && \
     echo "Asia/Seoul" > /etc/timezone && \
     apk del tzdata
