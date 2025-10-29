@@ -184,3 +184,37 @@ Infrastructure Layer (Config, Security, Logging)
 - **Repository Pattern**: UserRepository, RefreshTokenRepository
 - **Builder Pattern**: User, CustomUserDetails
 
+## CI/CD
+
+### GitHub Actions CI
+
+이 프로젝트는 GitHub Actions를 사용하여 자동 빌드 검증을 수행합니다.
+
+#### CI 워크플로우
+
+- **트리거**: Pull Request 생성/업데이트, main/develop 브랜치 푸시
+- **테스트 환경**: H2 인메모리 데이터베이스 (빠르고 간편)
+- **작업**:
+  - Java 17 환경 설정 (Amazon Corretto)
+  - Gradle 의존성 캐싱
+  - 빌드 및 테스트 실행 (`./gradlew clean build`)
+
+#### 테스트 전략
+
+- **통합 테스트**: `@SpringBootTest` + H2 인메모리 DB
+- **테스트 프로파일**: `application-test.yaml` (src/test/resources)
+- **장점**:
+  - ⚡ 빠른 실행 속도 (~5초)
+  - 🔧 환경변수 설정 불필요
+  - 🚀 CI/CD 파이프라인 간소화
+
+#### GitHub Secrets 설정
+
+**현재는 필요하지 않습니다.** 테스트는 H2 인메모리 DB와 더미 값을 사용하므로 별도의 secrets 설정이 불필요합니다.
+
+#### CI 워크플로우 파일 위치
+
+```
+.github/workflows/ci.yml
+```
+
