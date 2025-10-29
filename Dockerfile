@@ -29,6 +29,10 @@ RUN apk add --no-cache tzdata wget && \
 
 # 비root 사용자 생성 (보안 강화)
 RUN addgroup -S spring && adduser -S spring -G spring
+
+# 로그 디렉토리 생성 및 권한 설정
+RUN mkdir -p /app/logs && chown -R spring:spring /app
+
 USER spring:spring
 
 # 빌드된 JAR 파일 복사

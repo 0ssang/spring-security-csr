@@ -90,7 +90,7 @@ spring:
 
 # OAuth2 Redirect URL (프론트엔드)
 oauth2:
-  redirect-uri: ${OAUTH2_REDIRECT_URI}
+  redirect-uri: ${OAUTH2_REDIRECT_URI:http://localhost:5173/oauth/callback}
 
 # JWT
 jwt:
