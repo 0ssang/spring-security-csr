@@ -38,6 +38,7 @@ services:
 
   # Spring Boot 백엔드
   backend:
+    image: ${DOCKER_USERNAME}/jwt-auth-backend:latest
     build:
       context: .
       dockerfile: Dockerfile
