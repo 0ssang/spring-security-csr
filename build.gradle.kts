@@ -1,5 +1,6 @@
 plugins {
     java
+    jacoco
     id("org.springframework.boot") version "3.5.6"
     id("io.spring.dependency-management") version "1.1.7"
 }
@@ -57,4 +58,66 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport) // 테스트 후 자동으로 리포트 생성
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test) // 테스트 실행 후에 리포트 생성
+    reports {
+        xml.required.set(true) // CI/CD에서 사용
+        html.required.set(true) // 로컬에서 보기 좋은 HTML 리포트
+        csv.required.set(false)
+    }
+
+    classDirectories.setFrom(
+        files(classDirectories.files.map {
+            fileTree(it) {
+                exclude(
+                    "**/config/**",           // 설정 클래스
+                    "**/dto/**",              // DTO 클래스
+                    "**/exception/**",        // 예외 클래스
+                    "**/*Application*",       // Application 진입점
+                    "**/filter/**",           // 필터 (통합 테스트에서)
+                    "**/interceptor/**"       // 인터셉터 (통합 테스트에서)
+                )
+            }
+        })
+    )
+}
+
+tasks.jacocoTestCoverageVerification {
+    dependsOn(tasks.jacocoTestReport)
+    violationRules {
+        rule {
+            enabled = true
+            element = "CLASS"
+
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = "0.60".toBigDecimal() // 60% 커버리지 목표 (초보자용)
+            }
+
+            limit {
+                counter = "BRANCH"
+                value = "COVEREDRATIO"
+                minimum = "0.50".toBigDecimal() // 50% 분기 커버리지
+            }
+        }
+    }
+
+    classDirectories.setFrom(
+        files(classDirectories.files.map {
+            fileTree(it) {
+                exclude(
+                    "**/config/**",
+                    "**/dto/**",
+                    "**/exception/**",
+                    "**/*Application*",
+                    "**/filter/**",
+                    "**/interceptor/**"
+                )
+            }
+        })
+    )
 }
