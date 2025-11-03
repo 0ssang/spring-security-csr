@@ -2,47 +2,7 @@ spring:
   application:
     name: jwt-auth-test
 
-  # H2 인메모리 데이터베이스 (테스트용)
-  datasource:
-    url: jdbc:h2:mem:testdb;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-
-  # JPA
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.H2Dialect
-
-  # Redis (테스트용 - 임베디드)
-  data:
-    redis:
-      host: localhost
-      port: 6379
-
-  # OAuth2 비활성화 (테스트에서는 사용하지 않음)
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
-
-# JWT (테스트용)
-jwt:
-  secret: dGVzdC1qd3Qtc2VjcmV0LWtleS1mb3ItdW5pdC10ZXN0aW5nLW11c3QtYmUtbG9uZy1lbm91Z2gtZm9yLWhzMjU2LWFsZ29yaXRobS10by13b3JrLXByb3Blcmx5
-  access-token-expiration: 900000      # 15분
-  refresh-token-expiration: 604800000  # 7일
-
-# OAuth2 Redirect URL (테스트용)
-oauth2:
-  redirect-uri: http://localhost:3000/oauth/callback
-
-# Logging (테스트용)
+# Logging
 logging:
   level:
-    org.springframework.security: WARN
     com.study.jwtauth: DEBUG
-    org.hibernate.SQL: DEBUG
