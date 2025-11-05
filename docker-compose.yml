@@ -46,14 +46,12 @@ services:
     ports:
       - "8080:8080"
     environment:
-      # Database
-      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/jwt_auth
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-rootpassword}
+      # Spring Profile
+      SPRING_PROFILES_ACTIVE: prod
 
-      # Redis
-      SPRING_DATA_REDIS_HOST: redis
-      SPRING_DATA_REDIS_PORT: 6379
+      # Database (application-prod.yaml에서 URL 자동 설정됨)
+      DB_USERNAME: ${DB_USERNAME:-root}
+      DB_PASSWORD: ${DB_PASSWORD:-rootpassword}
 
       # JWT
       JWT_SECRET: ${JWT_SECRET}
@@ -72,7 +70,7 @@ services:
       NAVER_CLIENT_ID: ${NAVER_CLIENT_ID}
       NAVER_CLIENT_SECRET: ${NAVER_CLIENT_SECRET}
 
-      # Redirect URI
+      # Redirect URI (선택적 오버라이드)
       OAUTH2_REDIRECT_URI: ${OAUTH2_REDIRECT_URI:-http://localhost:3000/oauth/callback}
 
       # Logging

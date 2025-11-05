@@ -1,3 +1,4 @@
+# 공통 설정 (모든 프로필에서 공유)
 spring:
   application:
     name: jwt-auth
@@ -7,14 +8,11 @@ spring:
     ansi:
       enabled: ALWAYS
 
-  # Database
+  # Database 공통 설정
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
 
-  # JPA
+  # JPA 공통 설정
   jpa:
     hibernate:
       ddl-auto: update
@@ -24,13 +22,7 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MariaDBDialect
 
-  # Redis
-  data:
-    redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
-
-  # OAuth2 OIDC
+  # OAuth2 OIDC 공통 설정
   security:
     oauth2:
       client:
@@ -88,17 +80,13 @@ spring:
             jwk-set-uri: https://nid.naver.com/oauth2/jwks
             user-name-attribute: sub
 
-# OAuth2 Redirect URL (프론트엔드)
-oauth2:
-  redirect-uri: ${OAUTH2_REDIRECT_URI:http://localhost:5173/oauth/callback}
-
-# JWT
+# JWT 공통 설정
 jwt:
   secret: ${JWT_SECRET}
-  access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION}
-  refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
+  access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:900000}
+  refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:604800000}
 
-# Logging
+# Logging 공통 설정
 logging:
   level:
     org.springframework.security: INFO

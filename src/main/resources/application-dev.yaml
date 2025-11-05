@@ -1,0 +1,23 @@
+# 개발 환경 설정
+spring:
+  # Docker Compose Support - 개발용 인프라 자동 실행
+  docker:
+    compose:
+      enabled: true
+      file: docker-compose.dev.yaml
+
+  # Database - localhost 연결
+  datasource:
+    url: jdbc:mariadb://localhost:3306/toy
+    username: root
+    password: root
+
+  # Redis - localhost 연결
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+# OAuth2 Redirect URI - 개발 프론트엔드 (Vite 기본 포트)
+oauth2:
+  redirect-uri: ${OAUTH2_REDIRECT_URI:http://localhost:5173/oauth/callback}
