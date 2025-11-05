@@ -1,0 +1,17 @@
+# 프로덕션 환경 설정 (Docker Compose)
+spring:
+  # Database - Docker 서비스명으로 연결
+  datasource:
+    url: jdbc:mariadb://mariadb:3306/jwt_auth
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD}
+
+  # Redis - Docker 서비스명으로 연결
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+# OAuth2 Redirect URI - 프로덕션 프론트엔드
+oauth2:
+  redirect-uri: ${OAUTH2_REDIRECT_URI:http://localhost:3000/oauth/callback}
