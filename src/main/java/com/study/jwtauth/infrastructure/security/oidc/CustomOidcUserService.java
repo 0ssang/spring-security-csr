@@ -73,7 +73,7 @@ public class CustomOidcUserService extends OidcUserService {
                 .map(user -> {
                     // 기존 사용자: 정보 업데이트
                     log.info("기존 OIDC 사용자 업데이트: userId={}, provider={}", user.getId(), provider);
-                    user.updateOAuth2Info(name);
+                    user.updateOidcInfo(name);
                     return userRepository.save(user);
                 })
                 .orElseGet(() -> {
@@ -89,7 +89,7 @@ public class CustomOidcUserService extends OidcUserService {
                             .orElseGet(() -> {
                                 // 완전히 새로운 사용자
                                 log.info("신규 OIDC 사용자 생성: email={}, provider={}", email, provider);
-                                User newUser = User.createOAuth2User(email, name, provider, providerId);
+                                User newUser = User.createOidcUser(email, name, provider, providerId);
                                 return userRepository.save(newUser);
                             });
                 });

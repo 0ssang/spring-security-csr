@@ -35,7 +35,7 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "A005", "리프레시 토큰이 없습니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "A006", "유효하지 않은 리프레시 토큰입니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "A007", "인증이 필요합니다."),
-    UNSUPPORTED_OAUTH2_PROVIDER(HttpStatus.BAD_REQUEST, "A008", "지원하지 않는 OAuth2 제공자입니다.");
+    UNSUPPORTED_OIDC_PROVIDER(HttpStatus.BAD_REQUEST, "A008", "지원하지 않는 OIDC 제공자입니다.");
 
     private final HttpStatus status;
     private final String code;

@@ -88,20 +88,20 @@ public class User implements Serializable {
         return admin;
     }
 
-    public static User createOAuth2User(String email, String nickname, String provider, String providerId) {
+    public static User createOidcUser(String email, String nickname, String provider, String providerId) {
         User user = User.builder()
                 .email(email)
                 .nickname(nickname)
                 .role(Role.USER)
                 .build();
 
-        UserProvider oAuth2Provider = UserProvider.createOAuth2Provider(user, provider, providerId);
-        user.providers.add(oAuth2Provider);
+        UserProvider oidcProvider = UserProvider.createOidcProvider(user, provider, providerId);
+        user.providers.add(oidcProvider);
 
         return user;
     }
 
-    public void updateOAuth2Info(String nickname) {
+    public void updateOidcInfo(String nickname) {
         if (nickname != null && !nickname.isEmpty()) {
             validateNickname(nickname);
             this.nickname = nickname;
@@ -109,8 +109,8 @@ public class User implements Serializable {
     }
 
     public void addProvider(String provider, String providerId) {
-        UserProvider oAuth2Provider = UserProvider.createOAuth2Provider(this, provider, providerId);
-        this.providers.add(oAuth2Provider);
+        UserProvider oidcProvider = UserProvider.createOidcProvider(this, provider, providerId);
+        this.providers.add(oidcProvider);
     }
 
 

@@ -26,7 +26,7 @@ public class OidcUserInfoFactory {
             case "google" -> new GoogleOidcUserInfo(attributes);
             case "kakao" -> new KakaoOidcUserInfo(attributes);
             case "naver" -> new NaverOidcUserInfo(attributes);
-            default -> throw new BusinessException(ErrorCode.UNSUPPORTED_OAUTH2_PROVIDER);
+            default -> throw new BusinessException(ErrorCode.UNSUPPORTED_OIDC_PROVIDER);
         };
     }
 }
