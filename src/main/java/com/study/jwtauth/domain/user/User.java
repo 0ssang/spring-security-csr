@@ -102,10 +102,8 @@ public class User implements Serializable {
     }
 
     public void updateOidcInfo(String nickname) {
-        if (nickname != null && !nickname.isEmpty()) {
-            validateNickname(nickname);
-            this.nickname = nickname;
-        }
+        validateNickname(nickname);
+        this.nickname = nickname;
     }
 
     public void addProvider(String provider, String providerId) {
@@ -148,12 +146,12 @@ public class User implements Serializable {
         if(this == o) return true;
         if(o == null || getClass() != o.getClass()) return false;
         User user = (User)o;
-        return Objects.equals(id, user.id);
+        return Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(email);
     }
 
 }
