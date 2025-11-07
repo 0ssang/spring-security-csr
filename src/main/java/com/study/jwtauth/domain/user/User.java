@@ -64,6 +64,8 @@ public class User implements Serializable {
 
     // Factory
     public static User createUser(String email, String rawPassword, String nickname, PasswordEncoder passwordEncoder) {
+        validatePassword(rawPassword);
+
         User user = User.builder()
                 .email(email)
                 .nickname(nickname)
@@ -76,6 +78,8 @@ public class User implements Serializable {
     }
 
     public static User createAdmin(String email, String rawPassword, String nickname, PasswordEncoder passwordEncoder) {
+        validatePassword(rawPassword);
+
         User admin = User.builder()
                 .email(email)
                 .nickname(nickname)
@@ -137,6 +141,20 @@ public class User implements Serializable {
             throw new com.study.jwtauth.domain.user.exception.InvalidNicknameException(
                 com.study.jwtauth.domain.exception.ErrorCode.INVALID_NICKNAME_LENGTH,
                 nickname
+            );
+        }
+    }
+
+    private static void validatePassword(String password) {
+        if (password == null || password.trim().isEmpty()) {
+            throw new com.study.jwtauth.domain.user.exception.InvalidPasswordFormatException(
+                com.study.jwtauth.domain.exception.ErrorCode.PASSWORD_REQUIRED
+            );
+        }
+        if (!password.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")) {
+            throw new com.study.jwtauth.domain.user.exception.InvalidPasswordFormatException(
+                com.study.jwtauth.domain.exception.ErrorCode.INVALID_PASSWORD_FORMAT,
+                password
             );
         }
     }

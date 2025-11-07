@@ -26,6 +26,8 @@ public enum ErrorCode {
     INVALID_EMAIL_FORMAT(HttpStatus.BAD_REQUEST, "U006", "올바른 이메일 형식이 아닙니다."),
     NICKNAME_REQUIRED(HttpStatus.BAD_REQUEST, "U007", "닉네임은 필수입니다."),
     INVALID_NICKNAME_LENGTH(HttpStatus.BAD_REQUEST, "U008", "닉네임은 2-20자 사이여야 합니다."),
+    PASSWORD_REQUIRED(HttpStatus.BAD_REQUEST, "U009", "비밀번호는 필수입니다."),
+    INVALID_PASSWORD_FORMAT(HttpStatus.BAD_REQUEST, "U010", "비밀번호는 8자리 이상의 영문과 숫자를 포함해야 합니다."),
 
     // Auth
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "A001", "유효하지 않은 토큰입니다."),
