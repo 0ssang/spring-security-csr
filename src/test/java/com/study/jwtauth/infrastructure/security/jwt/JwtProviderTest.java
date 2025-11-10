@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.core.Authentication;
 
 import javax.crypto.SecretKey;
+import java.time.Duration;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.*;
@@ -49,8 +50,8 @@ class JwtProviderTest {
         // JwtProperties 설정 (테스트용)
         jwtProperties = new JwtProperties();
         jwtProperties.setSecret("dGVzdC1qd3Qtc2VjcmV0LWtleS1mb3ItdW5pdC10ZXN0aW5nLW11c3QtYmUtbG9uZy1lbm91Z2gtZm9yLWhzMjU2LWFsZ29yaXRobS10by13b3JrLXByb3Blcmx5");
-        jwtProperties.setAccessTokenExpiration(900000L);  // 15분
-        jwtProperties.setRefreshTokenExpiration(604800000L);  // 7일
+        jwtProperties.setAccessTokenExpiration(Duration.ofMinutes(15));  // 15분
+        jwtProperties.setRefreshTokenExpiration(Duration.ofDays(7));  // 7일
 
         // JwtProvider 생성
         jwtProvider = new JwtProvider(jwtProperties);
@@ -244,19 +245,19 @@ class JwtProviderTest {
     @DisplayName("Access Token 만료 시간 반환")
     void getAccessTokenExpiration_ReturnsCorrectValue() {
         // when
-        long expiration = jwtProvider.getAccessTokenExpiration();
+        Duration expiration = jwtProvider.getAccessTokenExpiration();
 
         // then
-        assertThat(expiration).isEqualTo(900000L);
+        assertThat(expiration).isEqualTo(Duration.ofMinutes(15));
     }
 
     @Test
     @DisplayName("Refresh Token 만료 시간 반환")
     void getRefreshTokenExpiration_ReturnsCorrectValue() {
         // when
-        long expiration = jwtProvider.getRefreshTokenExpiration();
+        Duration expiration = jwtProvider.getRefreshTokenExpiration();
 
         // then
-        assertThat(expiration).isEqualTo(604800000L);
+        assertThat(expiration).isEqualTo(Duration.ofDays(7));
     }
 }

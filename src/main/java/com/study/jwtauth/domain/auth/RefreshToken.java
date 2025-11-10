@@ -7,6 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.TimeToLive;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 /**
@@ -29,9 +30,9 @@ public class RefreshToken {
     @TimeToLive
     private Long ttl; // 초 단위
 
-    public static RefreshToken of(String email, String token, Long expirationMs) {
-        LocalDateTime expiresAt = LocalDateTime.now().plusSeconds(expirationMs / 1000);
-        Long ttl = expirationMs / 1000; // 밀리초 → 초 변환
+    public static RefreshToken of(String email, String token, Duration expiration) {
+        LocalDateTime expiresAt = LocalDateTime.now().plus(expiration);
+        Long ttl = expiration.getSeconds();
 
         return new RefreshToken(email, token, expiresAt, ttl);
     }
@@ -39,9 +40,9 @@ public class RefreshToken {
     /**
      * 토큰 갱신
      */
-    public RefreshToken updateToken(String newToken, Long expirationMs) {
-        LocalDateTime newExpiresAt = LocalDateTime.now().plusSeconds(expirationMs / 1000);
-        Long newTtl = expirationMs / 1000;
+    public RefreshToken updateToken(String newToken, Duration expiration) {
+        LocalDateTime newExpiresAt = LocalDateTime.now().plus(expiration);
+        Long newTtl = expiration.getSeconds();
 
         return new RefreshToken(this.email, newToken, newExpiresAt, newTtl);
     }

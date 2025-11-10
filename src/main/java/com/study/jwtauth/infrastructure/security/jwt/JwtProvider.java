@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.time.Duration;
 import java.util.Date;
 
 @Slf4j
@@ -25,8 +26,8 @@ public class JwtProvider {
     private static final String BEARER_TYPE = "Bearer";
 
     private final SecretKey key;
-    private final long accessTokenExpiration;
-    private final long refreshTokenExpiration;
+    private final Duration accessTokenExpiration;
+    private final Duration refreshTokenExpiration;
 
     public JwtProvider(JwtProperties jwtProperties) {
         byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getSecret());
@@ -40,7 +41,7 @@ public class JwtProvider {
      */
     public String createAccessToken(Long userId, String email, String nickname, String role) {
         long now = System.currentTimeMillis();
-        Date expiresAt = new Date(now + accessTokenExpiration);
+        Date expiresAt = new Date(now + accessTokenExpiration.toMillis());
 
         return Jwts.builder()
                 .subject(email)
@@ -58,7 +59,7 @@ public class JwtProvider {
      */
     public String createRefreshToken(String email) {
         long now = System.currentTimeMillis();
-        Date expiresAt = new Date(now + refreshTokenExpiration);
+        Date expiresAt = new Date(now + refreshTokenExpiration.toMillis());
 
         return Jwts.builder()
                 .subject(email)
@@ -141,14 +142,14 @@ public class JwtProvider {
     /**
      * Access Token 만료 시간 반환
      */
-    public long getAccessTokenExpiration() {
+    public Duration getAccessTokenExpiration() {
         return accessTokenExpiration;
     }
 
     /**
      * Refresh Token 만료 시간 반환
      */
-    public long getRefreshTokenExpiration() {
+    public Duration getRefreshTokenExpiration() {
         return refreshTokenExpiration;
     }
 }
