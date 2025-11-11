@@ -13,7 +13,7 @@ public interface RefreshTokenRepository extends CrudRepository<RefreshToken, Str
     /**
      * 이메일로 RefreshToken 조회
      */
-    Optional<RefreshToken> findById(String email);
+    Optional<RefreshToken> findByEmail(String email);
 
     /**
      * RefreshToken 저장

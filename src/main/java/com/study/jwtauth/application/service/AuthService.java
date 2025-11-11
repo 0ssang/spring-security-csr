@@ -143,7 +143,7 @@ public class AuthService {
         String email = jwtProvider.getEmailFromToken(refreshToken);
 
         // Redis에서 저장된 Refresh Token 조회
-        RefreshToken savedRefreshToken = refreshTokenRepository.findById(email)
+        RefreshToken savedRefreshToken = refreshTokenRepository.findByEmail(email)
                 .orElseThrow(() -> new InvalidTokenException("유효하지 않은 리프레시 토큰입니다."));
 
         // 토큰 일치 여부 확인
@@ -153,7 +153,7 @@ public class AuthService {
 
         // 사용자 조회
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException());
+                .orElseThrow(UserNotFoundException::new);
 
         // 새로운 Access Token 생성
         String newAccessToken = jwtProvider.createAccessToken(
