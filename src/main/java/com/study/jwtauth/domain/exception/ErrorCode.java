@@ -37,7 +37,14 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "A005", "리프레시 토큰이 없습니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "A006", "유효하지 않은 리프레시 토큰입니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "A007", "인증이 필요합니다."),
-    UNSUPPORTED_OIDC_PROVIDER(HttpStatus.BAD_REQUEST, "A008", "지원하지 않는 OIDC 제공자입니다.");
+    UNSUPPORTED_OIDC_PROVIDER(HttpStatus.BAD_REQUEST, "A008", "지원하지 않는 OIDC 제공자입니다."),
+
+    // POST
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "존재하지 않는 게시글입니다."),
+    POST_ACCESS_DENIED(HttpStatus.FORBIDDEN, "P002", "게시글에 대한 권한이 없습니다."),
+    INVALID_POST_TITLE(HttpStatus.BAD_REQUEST, "P003", "게시글 제목이 유효하지 않습니다."),
+    INVALID_POST_CONTENT(HttpStatus.BAD_REQUEST, "P004", "게시글 내용이 유효하지 않습니다.")
+    ;
 
     private final HttpStatus status;
     private final String code;
