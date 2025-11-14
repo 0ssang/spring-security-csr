@@ -6,7 +6,7 @@ import com.study.jwtauth.domain.exception.ErrorCode;
 public class InvalidTitleException extends BusinessException {
 
     public InvalidTitleException(){
-        super(ErrorCode.POST_NOT_FOUND);
+        super(ErrorCode.INVALID_POST_TITLE);
     }
 
     public InvalidTitleException(String message) {
