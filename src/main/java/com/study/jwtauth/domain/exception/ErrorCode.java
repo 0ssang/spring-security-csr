@@ -43,7 +43,12 @@ public enum ErrorCode {
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "P001", "존재하지 않는 게시글입니다."),
     POST_ACCESS_DENIED(HttpStatus.FORBIDDEN, "P002", "게시글에 대한 권한이 없습니다."),
     INVALID_POST_TITLE(HttpStatus.BAD_REQUEST, "P003", "게시글 제목이 유효하지 않습니다."),
-    INVALID_POST_CONTENT(HttpStatus.BAD_REQUEST, "P004", "게시글 내용이 유효하지 않습니다.")
+    INVALID_POST_CONTENT(HttpStatus.BAD_REQUEST, "P004", "게시글 내용이 유효하지 않습니다."),
+
+    // PostLike
+    ALREADY_LIKED(HttpStatus.CONFLICT, "PL001", "이미 좋아요를 누른 게시글입니다."),
+    POST_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "PL002", "좋아요 기록을 찾을 수 없습니다."),
+    CANNOT_LIKE_OWN_POST(HttpStatus.BAD_REQUEST, "PL003", "자신의 게시글에는 좋아요를 할 수 없습니다.")
     ;
 
     private final HttpStatus status;
