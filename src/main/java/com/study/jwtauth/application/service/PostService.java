@@ -99,7 +99,7 @@ public class PostService {
         post.delete(userId);
     }
 
-
+    // 헬퍼 - Page<Post>를 PageResponse<PostResponse>로 변환
     private PageResponse<PostResponse> convertToPageResponse(Page<Post> postPage) {
         List<Post> posts = postPage.getContent();
         List<Long> authorIds = posts
