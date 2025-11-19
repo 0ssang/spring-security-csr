@@ -54,7 +54,7 @@ public record PostResponse(
                 post.getTitle(),
                 post.getContent(),
                 post.getAuthorId(),
-                author.getNickname(),
+                author != null ? author.getNickname() : "알 수 없음",
                 post.getLikeCount(),
                 post.getViewCount(),
                 post.isPopular(),

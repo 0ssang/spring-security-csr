@@ -115,8 +115,7 @@ public class PostService {
         List<PostResponse> postResponses = posts.stream()
                 .map(post -> {
                     User author = authorMap.get(post.getAuthorId());
-                    String nickname = (author != null) ? author.getNickname() : "알 수 없음";
-                    return PostResponse.of(post, nickname);
+                    return PostResponse.of(post, author);
                 })
                 .toList();
 

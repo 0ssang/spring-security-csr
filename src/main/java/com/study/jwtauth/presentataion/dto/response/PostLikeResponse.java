@@ -43,7 +43,7 @@ public record PostLikeResponse(
                 postLike.getId(),
                 postLike.getPostId(),
                 postLike.getUserId(),
-                user.getNickname(),
+                user != null ? user.getNickname() : "알 수 없음",
                 postLike.getLikedAt()
         );
     }
