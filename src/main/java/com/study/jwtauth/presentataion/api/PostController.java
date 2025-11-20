@@ -81,9 +81,16 @@ public class PostController {
      */
     @GetMapping("/popular")
     public ApiResponse<PageResponse<PostResponse>> getMostViewedPosts(
+            @RequestParam(defaultValue = "views") String sortBy,
+            @RequestParam(defaultValue = "0") Integer threshold,
             @PageableDefault(size = 10) Pageable pageable
     ) {
-        PageResponse<PostResponse> response = postService.getMostViewedPosts(pageable);
+        PageResponse<PostResponse> response;
+        if(sortBy.equals("likes")) {
+            response = postService.getMostLikedPosts(threshold, pageable);
+        } else {
+            response = postService.getMostViewedPosts(pageable);
+        }
         return ApiResponse.ok(response);
     }
 

@@ -23,7 +23,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p " +
             "WHERE p.status = 'ACTIVE' AND p.likeCount >= :threshold " +
             "ORDER BY p.likeCount DESC, p.createdAt DESC ")
-    Page<Post> findPopularPosts(@Param("threshold") int threshold, Pageable pageable);
+    Page<Post> findMostLikedPosts(@Param("threshold") int threshold, Pageable pageable);
 
 
     // 조회수 기준 조회

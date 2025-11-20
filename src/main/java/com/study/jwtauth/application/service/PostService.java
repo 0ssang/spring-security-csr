@@ -70,9 +70,15 @@ public class PostService {
         return convertToPageResponse(posts);
     }
 
-    // 인기글 조회
+    // 인기글 조회(조회수)
     public PageResponse<PostResponse> getMostViewedPosts(Pageable pageable) {
         Page<Post> posts = postRepository.findMostViewedPosts(pageable);
+        return convertToPageResponse(posts);
+    }
+
+    // 인기글 조회(좋아요 수)
+    public PageResponse<PostResponse> getMostLikedPosts(int threshold, Pageable pageable) {
+        Page<Post> posts = postRepository.findMostLikedPosts(threshold, pageable);
         return convertToPageResponse(posts);
     }
 
