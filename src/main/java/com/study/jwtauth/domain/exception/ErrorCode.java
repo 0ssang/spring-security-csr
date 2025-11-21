@@ -48,7 +48,13 @@ public enum ErrorCode {
     // PostLike
     ALREADY_LIKED(HttpStatus.CONFLICT, "PL001", "이미 좋아요를 누른 게시글입니다."),
     POST_LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "PL002", "좋아요 기록을 찾을 수 없습니다."),
-    CANNOT_LIKE_OWN_POST(HttpStatus.BAD_REQUEST, "PL003", "자신의 게시글에는 좋아요를 할 수 없습니다.")
+    CANNOT_LIKE_OWN_POST(HttpStatus.BAD_REQUEST, "PL003", "자신의 게시글에는 좋아요를 할 수 없습니다."),
+
+    // Comment
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "CM001", "존재하지 않는 댓글입니다."),
+    COMMENT_ACCESS_DENIED(HttpStatus.FORBIDDEN, "CM002", "댓글에 대한 권한이 없습니다."),
+    INVALID_COMMENT_CONTENT(HttpStatus.BAD_REQUEST, "CM003", "댓글 내용이 유효하지 않습니다."),
+    INVALID_COMMENT_DEPTH(HttpStatus.BAD_REQUEST, "CM004", "답글의 답글을 작성할 수 없습니다.")
     ;
 
     private final HttpStatus status;
