@@ -13,6 +13,7 @@ import com.study.jwtauth.domain.user.User;
 import com.study.jwtauth.domain.user.UserRepository;
 import com.study.jwtauth.presentataion.dto.common.PageResponse;
 import com.study.jwtauth.presentataion.dto.request.CreateCommentRequest;
+import com.study.jwtauth.presentataion.dto.request.UpdateCommentRequest;
 import com.study.jwtauth.presentataion.dto.response.CommentResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -106,7 +107,7 @@ public class CommentService {
 
     // 댓글/답글 수정
     @Transactional
-    public CommentResponse updateComment(Long commentId, CreateCommentRequest request, Long userId) {
+    public CommentResponse updateComment(Long commentId, UpdateCommentRequest request, Long userId) {
         Comment comment = commentRepository.findByIdAndStatus(commentId, CommentStatus.ACTIVE)
                 .orElseThrow(CommentNotFoundException::new);
 
